@@ -7,6 +7,7 @@ This document explains the full setup for the APIFirstProject Django API, includ
 - APIFirstProject/manage.py
 - APIFirstProject/APIFirstProject/settings.py
 - APIFirstProject/APIFirstProject/urls.py
+- APIFirstProject/templates/index.html
 - APIFirstProject/AppAPI/models.py
 - APIFirstProject/AppAPI/views.py
 - APIFirstProject/AppAPI/serializers.py
@@ -61,6 +62,23 @@ Update APIFirstProject/settings.py:
                 'http://127.0.0.1:5173',
                 'http://localhost:5173',
         ]
+
+- Add Django templates directory:
+
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [BASE_DIR / 'templates'],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
 
 - Add static/media configuration:
 
@@ -126,6 +144,7 @@ In AppAPI/serializers.py create ProductSerializer for fields:
 
 In AppAPI/views.py create:
 
+- home (function view) to render templates/index.html
 - ProductsListCreate (ListCreateAPIView)
 - ProductsUpdateDelete (RetrieveUpdateDestroyAPIView)
 
@@ -133,6 +152,7 @@ In AppAPI/views.py create:
 
 ### App-level routes (AppAPI/urls.py)
 
+- /  -> home (render index.html)
 - APICategory/  -> CategoriesListCreate
 - APICategory/<int:pk>/  -> CategoriesUpdateDelete
 - APIProduct/  -> ProductsListCreate

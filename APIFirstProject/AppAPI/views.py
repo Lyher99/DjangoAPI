@@ -1,7 +1,12 @@
 from rest_framework import generics
+from django.shortcuts import render
 
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
+
+
+def home(request):
+	return render(request, 'index.html')
 
 
 class CategoriesListCreate(generics.ListCreateAPIView):
