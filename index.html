@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShopHub Admin</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Mulish:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --sidebar: #0d1117;
+        --sidebar-w: 230px;
+        --accent: #4f6ef7;
+        --accent-soft: #eef1fe;
+        --accent2: #f7954f;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --card: #ffffff;
+        --border: #e8eaf0;
+        --text: #1a1d2e;
+        --muted: #8b8fa8;
+        --radius: 14px;
+        --shadow: 0 2px 16px rgba(79, 110, 247, 0.08);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Mulish", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--sidebar-w);
+        height: 100vh;
+        background: var(--sidebar);
+        display: flex;
+        flex-direction: column;
+        z-index: 100;
+      }
+      .sidebar-brand {
+        padding: 1.6rem 1.4rem 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .brand-logo {
+        font-family: "Syne", sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.5px;
+      }
+      .brand-logo span {
+        color: var(--accent);
+      }
+      .brand-sub {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+      .sidebar-nav {
+        padding: 1rem 0.8rem;
+        flex: 1;
+      }
+      .nav-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.25);
+        padding: 0.8rem 0.6rem 0.4rem;
+      }
+      .nav-item-s {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.8rem;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+        text-decoration: none;
+        margin-bottom: 2px;
+      }
+      .nav-item-s i {
+        font-size: 1rem;
+        width: 18px;
+        text-align: center;
+      }
+      .nav-item-s:hover {
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+      }
+      .nav-item-s.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .sidebar-footer {
+        padding: 1rem 1.2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.25);
+      }
+
+      /* MAIN */
+      .main-wrap {
+        margin-left: var(--sidebar-w);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 0.9rem 1.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .topbar-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .content {
+        padding: 1.8rem;
+        flex: 1;
+      }
+
+      /* STAT CARDS */
+      .stat-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 1.3rem 1.4rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+      .stat-val {
+        font-family: "Syne", sans-serif;
+        font-size: 1.7rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 0.78rem;
+        color: var(--muted);
+        font-weight: 500;
+        margin-top: 3px;
+      }
+
+      /* PANEL */
+      .panel-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .panel-head {
+        padding: 1.2rem 1.5rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .panel-body {
+        padding: 1.5rem;
+      }
+
+      /* TABS */
+      .nav-tabs-custom {
+        display: flex;
+        gap: 0;
+        border: none;
+        margin-bottom: -1px;
+      }
+      .nav-tabs-custom .nav-link {
+        font-family: "Syne", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--muted);
+        padding: 0.7rem 1.3rem;
+        border: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+        background: none;
+        transition: all 0.18s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .nav-tabs-custom .nav-link:hover {
+        color: var(--accent);
+      }
+      .nav-tabs-custom .nav-link.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .tab-badge {
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 0.1rem 0.45rem;
+        border-radius: 50px;
+      }
+      .nav-link.active .tab-badge {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* TOOLBAR */
+      .panel-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.2rem;
+      }
+      .search-box {
+        position: relative;
+        max-width: 260px;
+        flex: 1;
+      }
+      .search-box input {
+        padding: 0.5rem 0.9rem 0.5rem 2.2rem;
+        border: 1.5px solid var(--border);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        background: var(--bg);
+        width: 100%;
+        outline: none;
+        transition: border-color 0.18s;
+        font-family: "Mulish", sans-serif;
+      }
+      .search-box input:focus {
+        border-color: var(--accent);
+        background: #fff;
+      }
+      .search-box i {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      /* BUTTONS */
+      .btn-primary-c {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.18s;
+        cursor: pointer;
+        font-family: "Mulish", sans-serif;
+      }
+      .btn-primary-c:hover {
+        background: #3d5be0;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+      }
+      .btn-ghost-c {
+        background: none;
+        border: 1.5px solid var(--border);
+        border-radius: 50px;
+        padding: 0.45rem 1rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.18s;
+        cursor: pointer;
+        font-family: "Mulish", sans-serif;
+      }
+      .btn-ghost-c:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* DATATABLE */
+      .dataTables_wrapper .dataTables_length select,
+      .dataTables_wrapper .dataTables_filter input {
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.83rem;
+        outline: none;
+        font-family: "Mulish", sans-serif;
+      }
+      .dataTables_wrapper .dataTables_filter input:focus {
+        border-color: var(--accent);
+      }
+      .dataTables_wrapper .dataTables_info,
+      .dataTables_wrapper .dataTables_length label {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 8px !important;
+        font-size: 0.82rem !important;
+        padding: 0.25rem 0.65rem !important;
+        font-family: "Mulish", sans-serif !important;
+      }
+      .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: var(--accent) !important;
+        border-color: var(--accent) !important;
+        color: #fff !important;
+      }
+      .dataTables_wrapper
+        .dataTables_paginate
+        .paginate_button:hover:not(.current) {
+        background: var(--accent-soft) !important;
+        border-color: var(--accent-soft) !important;
+        color: var(--accent) !important;
+      }
+      table.dataTable thead th {
+        font-family: "Syne", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--muted);
+        border-bottom: 2px solid var(--border) !important;
+        padding: 0.75rem 0.9rem;
+        white-space: nowrap;
+      }
+      table.dataTable tbody td {
+        font-size: 0.88rem;
+        padding: 0.75rem 0.9rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border) !important;
+      }
+      table.dataTable tbody tr:hover td {
+        background: var(--accent-soft);
+      }
+      table.dataTable {
+        border-collapse: collapse !important;
+      }
+      .tbl-thumb {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: var(--bg);
+        border: 1px solid var(--border);
+      }
+      .tbl-thumb-ph {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+      .act-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .act-edit {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .act-edit:hover {
+        background: var(--accent);
+        color: #fff;
+      }
+      .act-del {
+        background: #fef2f2;
+        color: var(--danger);
+      }
+      .act-del:hover {
+        background: var(--danger);
+        color: #fff;
+      }
+      .badge-avail {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 0.25rem 0.6rem;
+        border-radius: 50px;
+      }
+
+      /* MODAL */
+      .modal-content {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.13);
+      }
+      .modal-header {
+        padding: 1.3rem 1.5rem 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+      .modal-body {
+        padding: 1.5rem;
+      }
+      .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border);
+      }
+      .form-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.35rem;
+      }
+      .form-control,
+      .form-select {
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.88rem;
+        font-family: "Mulish", sans-serif;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(79, 110, 247, 0.12);
+        outline: none;
+      }
+      textarea.form-control {
+        resize: vertical;
+        min-height: 90px;
+      }
+      .img-preview-wrap {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+        border: 1.5px dashed var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--bg);
+        flex-shrink: 0;
+      }
+      .img-preview-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .img-preview-wrap i {
+        font-size: 1.5rem;
+        color: var(--muted);
+      }
+
+      /* FILE UPLOAD */
+      .upload-zone {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 1.2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--bg);
+        position: relative;
+      }
+      .upload-zone:hover,
+      .upload-zone.drag-over {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+      .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-zone .uz-icon {
+        font-size: 1.6rem;
+        color: var(--muted);
+        margin-bottom: 0.3rem;
+        display: block;
+      }
+      .upload-zone .uz-text {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .upload-zone .uz-text strong {
+        color: var(--accent);
+      }
+      .upload-preview {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding: 0.6rem 0.8rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+      .upload-preview img {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .upload-preview .up-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .upload-preview .up-size {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .upload-preview .up-remove {
+        background: none;
+        border: none;
+        color: var(--danger);
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0 0.2rem;
+        flex-shrink: 0;
+      }
+      .current-img-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.8rem;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 10px;
+        margin-bottom: 0.6rem;
+        font-size: 0.82rem;
+      }
+      .current-img-wrap img {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+      .current-img-wrap span {
+        color: #166534;
+        flex: 1;
+      }
+      .current-img-wrap small {
+        color: var(--muted);
+      }
+
+      /* TOAST */
+      .toast-custom {
+        background: var(--sidebar);
+        color: #fff;
+        border-radius: 12px;
+        border: none;
+        min-width: 260px;
+        font-family: "Mulish", sans-serif;
+        font-size: 0.88rem;
+      }
+      .toast-custom .toast-body {
+        padding: 0.9rem 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      /* LOADING */
+      .table-loading {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .spinner-dot {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .spinner-dot span {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: bounce 1.2s infinite;
+      }
+      .spinner-dot span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .spinner-dot span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-6px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .main-wrap {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">Shop<span>Hub</span></div>
+        <div class="brand-sub">Admin Panel</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <a class="nav-item-s active" onclick="setNav(this)"
+          ><i class="bi bi-grid-1x2-fill"></i> Dashboard</a
+        >
+        <div class="nav-label">Catalog</div>
+        <a
+          class="nav-item-s"
+          onclick="
+            setNav(this);
+            switchTab('products');
+          "
+          ><i class="bi bi-box-seam"></i> Products</a
+        >
+        <a
+          class="nav-item-s"
+          onclick="
+            setNav(this);
+            switchTab('categories');
+          "
+          ><i class="bi bi-tag"></i> Categories</a
+        >
+      </nav>
+      <div class="sidebar-footer">v1.0 · Django REST API</div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-wrap">
+      <header class="topbar">
+        <div class="topbar-title">Dashboard</div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn-ghost-c" onclick="refreshAll()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+          <div class="avatar">A</div>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- STATS -->
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #eef1fe">
+                <i class="bi bi-box-seam" style="color: var(--accent)"></i>
+              </div>
+              <div>
+                <div class="stat-val" id="statProducts">—</div>
+                <div class="stat-label">Total Products</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #fef3eb">
+                <i class="bi bi-tag" style="color: var(--accent2)"></i>
+              </div>
+              <div>
+                <div class="stat-val" id="statCategories">—</div>
+                <div class="stat-label">Categories</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #f0fdf4">
+                <i class="bi bi-check-circle" style="color: var(--success)"></i>
+              </div>
+              <div>
+                <div class="stat-val" id="statInStock">—</div>
+                <div class="stat-label">In Stock</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background: #fff7ed">
+                <i class="bi bi-currency-dollar" style="color: var(--warn)"></i>
+              </div>
+              <div>
+                <div class="stat-val" id="statAvgPrice">—</div>
+                <div class="stat-label">Avg. Price</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB PANEL -->
+        <div class="panel-card">
+          <div class="panel-head">
+            <ul class="nav-tabs-custom" id="mainTabs">
+              <li>
+                <button
+                  class="nav-link active"
+                  data-tab="products"
+                  onclick="switchTab('products')"
+                >
+                  <i class="bi bi-box-seam"></i> Products
+                  <span class="tab-badge" id="badgeProducts">0</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  class="nav-link"
+                  data-tab="categories"
+                  onclick="switchTab('categories')"
+                >
+                  <i class="bi bi-tag"></i> Categories
+                  <span class="tab-badge" id="badgeCategories">0</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div class="panel-body">
+            <!-- PRODUCTS TAB -->
+            <div id="tabProducts">
+              <div class="panel-toolbar">
+                <div class="search-box">
+                  <i class="bi bi-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    oninput="dtProducts && dtProducts.search(this.value).draw()"
+                  />
+                </div>
+                <button class="btn-primary-c" onclick="openAddProduct()">
+                  <i class="bi bi-plus-lg"></i> Add Product
+                </button>
+              </div>
+              <div id="prodTableWrap">
+                <div class="table-loading">
+                  <div class="spinner-dot">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mt-2">Loading products…</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CATEGORIES TAB -->
+            <div id="tabCategories" style="display: none">
+              <div class="panel-toolbar">
+                <div class="search-box">
+                  <i class="bi bi-search"></i>
+                  <input
+                    type="text"
+                    placeholder="Search categories..."
+                    oninput="
+                      dtCategories && dtCategories.search(this.value).draw()
+                    "
+                  />
+                </div>
+                <button class="btn-primary-c" onclick="openAddCategory()">
+                  <i class="bi bi-plus-lg"></i> Add Category
+                </button>
+              </div>
+              <div id="catTableWrap">
+                <div class="table-loading">
+                  <div class="spinner-dot">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="mt-2">Loading categories…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ══ PRODUCT MODAL ══ -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+      <div
+        class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productModalTitle">Add Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="pf_id" />
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Product Image</label>
+                <div
+                  id="pfCurrentImg"
+                  style="display: none"
+                  class="current-img-wrap"
+                >
+                  <img id="pfCurrentImgEl" src="" alt="current" />
+                  <span>Current image</span>
+                  <small>(upload new to replace)</small>
+                </div>
+                <div
+                  class="upload-zone"
+                  id="pfUploadZone"
+                  ondragover="zoneDrag(event, this, true)"
+                  ondragleave="zoneDrag(event, this, false)"
+                  ondrop="zoneDrop(event, 'pf_file', 'pfFilePreview')"
+                >
+                  <input
+                    type="file"
+                    id="pf_file"
+                    accept="image/*"
+                    onchange="showFilePreview('pf_file', 'pfFilePreview')"
+                  />
+                  <i class="bi bi-cloud-arrow-up uz-icon"></i>
+                  <div class="uz-text">
+                    <strong>Click to upload</strong> or drag &amp; drop
+                  </div>
+                  <div class="uz-text" style="margin-top: 0.2rem">
+                    PNG, JPG, WEBP (max 10MB)
+                  </div>
+                </div>
+                <div
+                  id="pfFilePreview"
+                  style="display: none"
+                  class="upload-preview"
+                >
+                  <img id="pfFilePreviewImg" src="" alt="preview" />
+                  <div>
+                    <div class="up-name" id="pfFileName"></div>
+                    <div class="up-size" id="pfFileSize"></div>
+                  </div>
+                  <button
+                    class="up-remove"
+                    onclick="
+                      clearFile('pf_file', 'pfFilePreview', 'pfUploadZone')
+                    "
+                    title="Remove"
+                  >
+                    <i class="bi bi-x-circle-fill"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label"
+                  >Product Name <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  id="pf_name"
+                  class="form-control"
+                  placeholder="e.g. MacBook Pro"
+                />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label"
+                  >Price <span class="text-danger">*</span></label
+                >
+                <input
+                  type="number"
+                  id="pf_price"
+                  class="form-control"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Category</label>
+                <select id="pf_category" class="form-select">
+                  <option value="">— None —</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Weight</label>
+                <input
+                  type="text"
+                  id="pf_weight"
+                  class="form-control"
+                  placeholder="e.g. 1.2kg"
+                />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Availability</label>
+                <input
+                  type="text"
+                  id="pf_avail"
+                  class="form-control"
+                  placeholder="In Stock / Out of Stock"
+                />
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Shipping</label>
+                <input
+                  type="text"
+                  id="pf_ship"
+                  class="form-control"
+                  placeholder="Free / $5.00"
+                />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea
+                  id="pf_desc"
+                  class="form-control"
+                  placeholder="Product description…"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-ghost-c" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn-primary-c" onclick="saveProduct()">
+              <i class="bi bi-cloud-check me-1"></i
+              ><span id="pfSaveLabel">Save Product</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CATEGORY MODAL ══ -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="categoryModalTitle">Add Category</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="cf_id" />
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Category Image</label>
+                <div
+                  id="cfCurrentImg"
+                  style="display: none"
+                  class="current-img-wrap"
+                >
+                  <img id="cfCurrentImgEl" src="" alt="current" />
+                  <span>Current image</span>
+                  <small>(upload new to replace)</small>
+                </div>
+                <div
+                  class="upload-zone"
+                  id="cfUploadZone"
+                  ondragover="zoneDrag(event, this, true)"
+                  ondragleave="zoneDrag(event, this, false)"
+                  ondrop="zoneDrop(event, 'cf_file', 'cfFilePreview')"
+                >
+                  <input
+                    type="file"
+                    id="cf_file"
+                    accept="image/*"
+                    onchange="showFilePreview('cf_file', 'cfFilePreview')"
+                  />
+                  <i class="bi bi-cloud-arrow-up uz-icon"></i>
+                  <div class="uz-text">
+                    <strong>Click to upload</strong> or drag &amp; drop
+                  </div>
+                  <div class="uz-text" style="margin-top: 0.2rem">
+                    PNG, JPG, WEBP (max 10MB)
+                  </div>
+                </div>
+                <div
+                  id="cfFilePreview"
+                  style="display: none"
+                  class="upload-preview"
+                >
+                  <img id="cfFilePreviewImg" src="" alt="preview" />
+                  <div>
+                    <div class="up-name" id="cfFileName"></div>
+                    <div class="up-size" id="cfFileSize"></div>
+                  </div>
+                  <button
+                    class="up-remove"
+                    onclick="
+                      clearFile('cf_file', 'cfFilePreview', 'cfUploadZone')
+                    "
+                    title="Remove"
+                  >
+                    <i class="bi bi-x-circle-fill"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label"
+                  >Category Name <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  id="cf_name"
+                  class="form-control"
+                  placeholder="e.g. Electronics"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-ghost-c" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn-primary-c" onclick="saveCategory()">
+              <i class="bi bi-cloud-check me-1"></i
+              ><span id="cfSaveLabel">Save Category</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DELETE CONFIRM ══ -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+          <div class="modal-body text-center p-4">
+            <div
+              style="
+                font-size: 2.5rem;
+                color: var(--danger);
+                margin-bottom: 0.75rem;
+              "
+            >
+              <i class="bi bi-trash3"></i>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 0.4rem;
+              "
+            >
+              Delete this item?
+            </div>
+            <div
+              style="font-size: 0.85rem; color: var(--muted)"
+              id="deleteModalMsg"
+            >
+              This action cannot be undone.
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center border-0 pt-0 pb-4">
+            <button class="btn-ghost-c" data-bs-dismiss="modal">Cancel</button>
+            <button
+              style="
+                background: var(--danger);
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                padding: 0.45rem 1.1rem;
+                font-size: 0.85rem;
+                font-weight: 600;
+                cursor: pointer;
+                font-family: &quot;Mulish&quot;, sans-serif;
+              "
+              id="confirmDeleteBtn"
+            >
+              <i class="bi bi-trash3 me-1"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div
+      class="toast-container position-fixed bottom-0 end-0 p-3"
+      style="z-index: 9999"
+    >
+      <div id="appToast" class="toast toast-custom" role="alert">
+        <div class="toast-body">
+          <span id="toastIcon" style="font-size: 1.1rem">✓</span>
+          <span id="toastMsg">Done!</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+      const BASE = "http://127.0.0.1:8000";
+      const CAT_URL = `${BASE}/api/APICategory/`;
+      const PROD_URL = `${BASE}/api/APIProduct/`;
+
+      let allProducts = [],
+        allCategories = [],
+        dtProducts = null,
+        dtCategories = null;
+
+      /* TOAST */
+      function toast(msg, type = "success") {
+        const icons = { success: "✓", danger: "✗", warning: "⚠" };
+        const colors = {
+          success: "#22c55e",
+          danger: "#ef4444",
+          warning: "#f59e0b",
+        };
+        document.getElementById("toastMsg").textContent = msg;
+        document.getElementById("toastIcon").textContent = icons[type] || "✓";
+        document.getElementById("toastIcon").style.color =
+          colors[type] || "#22c55e";
+        new bootstrap.Toast(document.getElementById("appToast"), {
+          delay: 3000,
+        }).show();
+      }
+
+      /* SIDEBAR */
+      function setNav(el) {
+        document
+          .querySelectorAll(".nav-item-s")
+          .forEach((n) => n.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      /* TABS */
+      function switchTab(tab) {
+        document.getElementById("tabProducts").style.display =
+          tab === "products" ? "" : "none";
+        document.getElementById("tabCategories").style.display =
+          tab === "categories" ? "" : "none";
+        document
+          .querySelectorAll("#mainTabs .nav-link")
+          .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+      }
+
+      /* HELPERS */
+      function getCatName(id) {
+        const c = allCategories.find((x) => x.id === id);
+        return c ? c.categoryName : "—";
+      }
+      function populateCatSelect(selId, val = "") {
+        const sel = document.getElementById(selId);
+        sel.innerHTML =
+          '<option value="">— None —</option>' +
+          allCategories
+            .map(
+              (c) =>
+                `<option value="${c.id}"${c.id == val ? " selected" : ""}>${c.categoryName}</option>`,
+            )
+            .join("");
+      }
+
+      /* ══ FETCH ══ */
+      async function fetchCategories() {
+        try {
+          const r = await fetch(CAT_URL);
+          allCategories = await r.json();
+          document.getElementById("statCategories").textContent =
+            allCategories.length;
+          document.getElementById("badgeCategories").textContent =
+            allCategories.length;
+          renderCategoryTable();
+        } catch (e) {
+          toast("Cannot reach API — is Django running?", "danger");
+        }
+      }
+      async function fetchProducts() {
+        try {
+          const r = await fetch(PROD_URL);
+          allProducts = await r.json();
+          document.getElementById("statProducts").textContent =
+            allProducts.length;
+          document.getElementById("badgeProducts").textContent =
+            allProducts.length;
+          const inStock = allProducts.filter((p) =>
+            (p.availability || "").toLowerCase().includes("stock"),
+          ).length;
+          document.getElementById("statInStock").textContent = inStock;
+          const prices = allProducts
+            .map((p) => parseFloat(p.price))
+            .filter((n) => !isNaN(n));
+          document.getElementById("statAvgPrice").textContent = prices.length
+            ? "$" +
+              (prices.reduce((a, b) => a + b, 0) / prices.length).toFixed(0)
+            : "—";
+          renderProductTable();
+        } catch (e) {
+          toast("Cannot reach API — is Django running?", "danger");
+        }
+      }
+      async function refreshAll() {
+        if (dtProducts) {
+          dtProducts.destroy();
+          dtProducts = null;
+        }
+        if (dtCategories) {
+          dtCategories.destroy();
+          dtCategories = null;
+        }
+        document.getElementById("prodTableWrap").innerHTML =
+          '<div class="table-loading"><div class="spinner-dot"><span></span><span></span><span></span></div><div class="mt-2">Loading…</div></div>';
+        document.getElementById("catTableWrap").innerHTML =
+          '<div class="table-loading"><div class="spinner-dot"><span></span><span></span><span></span></div><div class="mt-2">Loading…</div></div>';
+        await fetchCategories();
+        await fetchProducts();
+        toast("Data refreshed");
+      }
+
+      /* ══ RENDER TABLES ══ */
+      function renderProductTable() {
+        document.getElementById("prodTableWrap").innerHTML = `
+    <div class="table-responsive">
+    <table id="dtProd" class="table table-hover" style="width:100%">
+      <thead><tr><th>#</th><th>Image</th><th>Name</th><th>Price</th><th>Category</th><th>Availability</th><th>Shipping</th><th>Weight</th><th>Actions</th></tr></thead>
+      <tbody>${allProducts
+        .map((p, i) => {
+          const img = p.productImage
+            ? `<img src="${p.productImage}" class="tbl-thumb" onerror="this.outerHTML='<span class=tbl-thumb-ph><i class=bi\\ bi-box-seam></i></span>'"/>`
+            : `<span class="tbl-thumb-ph"><i class="bi bi-box-seam"></i></span>`;
+          const avail = p.availability || "";
+          const badge = avail
+            ? `<span class="badge-avail" style="background:${avail.toLowerCase().includes("out") ? "#fef2f2" : "#f0fdf4"};color:${avail.toLowerCase().includes("out") ? "var(--danger)" : "var(--success)"};">${avail}</span>`
+            : `<span style="color:var(--muted);font-size:.8rem;">—</span>`;
+          return `<tr>
+          <td style="color:var(--muted);font-size:.8rem;">${i + 1}</td>
+          <td>${img}</td>
+          <td><div style="font-weight:600;">${p.productName}</div>${p.productDescript ? `<div style="font-size:.75rem;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${p.productDescript}</div>` : ""}</td>
+          <td><span style="font-weight:700;color:var(--accent);">$${parseFloat(p.price).toLocaleString()}</span></td>
+          <td>${getCatName(p.categoryID)}</td>
+          <td>${badge}</td>
+          <td>${p.shipping || `<span style="color:var(--muted);">—</span>`}</td>
+          <td>${p.weight || `<span style="color:var(--muted);">—</span>`}</td>
+          <td><div class="d-flex gap-1">
+            <button class="act-btn act-edit" title="Edit" onclick="openEditProduct(${p.id})"><i class="bi bi-pencil"></i></button>
+            <button class="act-btn act-del" title="Delete" onclick="confirmDelete('product',${p.id},'${p.productName.replace(/'/g, "\\'")}')"><i class="bi bi-trash3"></i></button>
+          </div></td>
+        </tr>`;
+        })
+        .join("")}</tbody>
+    </table></div>`;
+        dtProducts = $("#dtProd").DataTable({
+          pageLength: 10,
+          lengthMenu: [5, 10, 25, 50],
+          order: [[0, "asc"]],
+          columnDefs: [
+            { orderable: false, targets: [1, 8] },
+            { searchable: false, targets: [1] },
+          ],
+          language: { search: "", searchPlaceholder: "Filter…" },
+          dom: '<"d-flex align-items-center justify-content-between mb-2"li>t<"mt-3"p>',
+        });
+      }
+
+      function renderCategoryTable() {
+        document.getElementById("catTableWrap").innerHTML = `
+    <div class="table-responsive">
+    <table id="dtCat" class="table table-hover" style="width:100%">
+      <thead><tr><th>#</th><th>Image</th><th>Category Name</th><th>ID</th><th>Actions</th></tr></thead>
+      <tbody>${allCategories
+        .map((c, i) => {
+          const img = c.categoryImage
+            ? `<img src="${c.categoryImage}" class="tbl-thumb" onerror="this.outerHTML='<span class=tbl-thumb-ph><i class=bi\\ bi-tag></i></span>'"/>`
+            : `<span class="tbl-thumb-ph"><i class="bi bi-tag"></i></span>`;
+          return `<tr>
+          <td style="color:var(--muted);font-size:.8rem;">${i + 1}</td>
+          <td>${img}</td>
+          <td><span style="font-weight:600;">${c.categoryName}</span></td>
+          <td><code style="font-size:.78rem;background:var(--bg);padding:.2rem .5rem;border-radius:6px;">#${c.id}</code></td>
+          <td><div class="d-flex gap-1">
+            <button class="act-btn act-edit" title="Edit" onclick="openEditCategory(${c.id})"><i class="bi bi-pencil"></i></button>
+            <button class="act-btn act-del" title="Delete" onclick="confirmDelete('category',${c.id},'${c.categoryName.replace(/'/g, "\\'")}')"><i class="bi bi-trash3"></i></button>
+          </div></td>
+        </tr>`;
+        })
+        .join("")}</tbody>
+    </table></div>`;
+        dtCategories = $("#dtCat").DataTable({
+          pageLength: 10,
+          lengthMenu: [5, 10, 25, 50],
+          order: [[0, "asc"]],
+          columnDefs: [{ orderable: false, targets: [1, 4] }],
+          language: { search: "", searchPlaceholder: "Filter…" },
+          dom: '<"d-flex align-items-center justify-content-between mb-2"li>t<"mt-3"p>',
+        });
+      }
+
+      /* ══ FILE UPLOAD HELPERS ══ */
+      function showFilePreview(inputId, previewId) {
+        const file = document.getElementById(inputId).files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById(previewId + "Img").src = e.target.result;
+          document.getElementById(
+            previewId.replace("Preview", "") + "Name",
+          ).textContent = file.name;
+          document.getElementById(
+            previewId.replace("Preview", "") + "Size",
+          ).textContent = formatBytes(file.size);
+          document.getElementById(previewId).style.display = "flex";
+          document.getElementById(
+            previewId.replace("FilePreview", "UploadZone"),
+          ).style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+      function clearFile(inputId, previewId, zoneId) {
+        document.getElementById(inputId).value = "";
+        document.getElementById(previewId).style.display = "none";
+        document.getElementById(zoneId).style.display = "block";
+      }
+      function zoneDrag(e, el, enter) {
+        e.preventDefault();
+        el.classList.toggle("drag-over", enter);
+      }
+      function zoneDrop(e, inputId, previewId) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+        const file = e.dataTransfer.files[0];
+        if (!file || !file.type.startsWith("image/")) return;
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        document.getElementById(inputId).files = dt.files;
+        showFilePreview(inputId, previewId);
+      }
+      function formatBytes(b) {
+        return b < 1024 * 1024
+          ? (b / 1024).toFixed(1) + " KB"
+          : (b / 1024 / 1024).toFixed(1) + " MB";
+      }
+
+      /* ══ PRODUCT CRUD ══ */
+      function clearProductForm() {
+        [
+          "pf_id",
+          "pf_name",
+          "pf_price",
+          "pf_weight",
+          "pf_avail",
+          "pf_ship",
+          "pf_desc",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        document.getElementById("pf_file").value = "";
+        document.getElementById("pfFilePreview").style.display = "none";
+        document.getElementById("pfUploadZone").style.display = "block";
+        document.getElementById("pfCurrentImg").style.display = "none";
+        populateCatSelect("pf_category");
+      }
+      function openAddProduct() {
+        clearProductForm();
+        document.getElementById("productModalTitle").textContent =
+          "Add Product";
+        document.getElementById("pfSaveLabel").textContent = "Save Product";
+        new bootstrap.Modal(document.getElementById("productModal")).show();
+      }
+      function openEditProduct(id) {
+        const p = allProducts.find((x) => x.id === id);
+        if (!p) return;
+        clearProductForm();
+        document.getElementById("pf_id").value = p.id;
+        document.getElementById("pf_name").value = p.productName || "";
+        document.getElementById("pf_price").value = p.price || "";
+        document.getElementById("pf_weight").value = p.weight || "";
+        document.getElementById("pf_avail").value = p.availability || "";
+        document.getElementById("pf_ship").value = p.shipping || "";
+        document.getElementById("pf_desc").value = p.productDescript || "";
+        populateCatSelect("pf_category", p.categoryID);
+        if (p.productImage) {
+          document.getElementById("pfCurrentImgEl").src = p.productImage;
+          document.getElementById("pfCurrentImg").style.display = "flex";
+        }
+        document.getElementById("productModalTitle").textContent =
+          "Edit Product";
+        document.getElementById("pfSaveLabel").textContent = "Update Product";
+        new bootstrap.Modal(document.getElementById("productModal")).show();
+      }
+      async function saveProduct() {
+        const id = document.getElementById("pf_id").value;
+        const name = document.getElementById("pf_name").value.trim();
+        const price = document.getElementById("pf_price").value.trim();
+        if (!name || !price) {
+          toast("Name and Price are required", "warning");
+          return;
+        }
+
+        const fd = new FormData();
+        fd.append("productName", name);
+        fd.append("price", price);
+        fd.append(
+          "productDescript",
+          document.getElementById("pf_desc").value || "",
+        );
+        fd.append("weight", document.getElementById("pf_weight").value || "");
+        fd.append(
+          "availability",
+          document.getElementById("pf_avail").value || "",
+        );
+        fd.append("shipping", document.getElementById("pf_ship").value || "");
+        const catVal = document.getElementById("pf_category").value;
+        if (catVal) fd.append("categoryID", catVal);
+        const fileInput = document.getElementById("pf_file");
+        if (fileInput.files[0]) fd.append("productImage", fileInput.files[0]);
+
+        try {
+          const r = await fetch(id ? `${PROD_URL}${id}/` : PROD_URL, {
+            method: id ? "PUT" : "POST",
+            body: fd,
+          });
+          if (r.ok) {
+            bootstrap.Modal.getInstance(
+              document.getElementById("productModal"),
+            ).hide();
+            toast(id ? "Product updated!" : "Product added!");
+            if (dtProducts) {
+              dtProducts.destroy();
+              dtProducts = null;
+            }
+            await fetchProducts();
+          } else {
+            const err = await r.json();
+            toast("Error: " + JSON.stringify(err), "danger");
+          }
+        } catch (e) {
+          toast("Network error", "danger");
+        }
+      }
+
+      /* ══ CATEGORY CRUD ══ */
+      function clearCategoryForm() {
+        ["cf_id", "cf_name"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("cf_file").value = "";
+        document.getElementById("cfFilePreview").style.display = "none";
+        document.getElementById("cfUploadZone").style.display = "block";
+        document.getElementById("cfCurrentImg").style.display = "none";
+      }
+      function openAddCategory() {
+        clearCategoryForm();
+        document.getElementById("categoryModalTitle").textContent =
+          "Add Category";
+        document.getElementById("cfSaveLabel").textContent = "Save Category";
+        new bootstrap.Modal(document.getElementById("categoryModal")).show();
+      }
+      function openEditCategory(id) {
+        const c = allCategories.find((x) => x.id === id);
+        if (!c) return;
+        clearCategoryForm();
+        document.getElementById("cf_id").value = c.id;
+        document.getElementById("cf_name").value = c.categoryName || "";
+        if (c.categoryImage) {
+          document.getElementById("cfCurrentImgEl").src = c.categoryImage;
+          document.getElementById("cfCurrentImg").style.display = "flex";
+        }
+        document.getElementById("categoryModalTitle").textContent =
+          "Edit Category";
+        document.getElementById("cfSaveLabel").textContent = "Update Category";
+        new bootstrap.Modal(document.getElementById("categoryModal")).show();
+      }
+      async function saveCategory() {
+        const id = document.getElementById("cf_id").value;
+        const name = document.getElementById("cf_name").value.trim();
+        if (!name) {
+          toast("Category name is required", "warning");
+          return;
+        }
+
+        const fd = new FormData();
+        fd.append("categoryName", name);
+        const fileInput = document.getElementById("cf_file");
+        if (fileInput.files[0]) fd.append("categoryImage", fileInput.files[0]);
+
+        try {
+          const r = await fetch(id ? `${CAT_URL}${id}/` : CAT_URL, {
+            method: id ? "PUT" : "POST",
+            body: fd,
+          });
+          if (r.ok) {
+            bootstrap.Modal.getInstance(
+              document.getElementById("categoryModal"),
+            ).hide();
+            toast(id ? "Category updated!" : "Category added!");
+            if (dtCategories) {
+              dtCategories.destroy();
+              dtCategories = null;
+            }
+            await fetchCategories();
+          } else {
+            toast("Error saving category", "danger");
+          }
+        } catch (e) {
+          toast("Network error", "danger");
+        }
+      }
+
+      /* ══ DELETE ══ */
+      function confirmDelete(type, id, name) {
+        document.getElementById("deleteModalMsg").textContent =
+          `Delete "${name}"? This cannot be undone.`;
+        document.getElementById("confirmDeleteBtn").onclick = () =>
+          doDelete(type, id);
+        new bootstrap.Modal(document.getElementById("deleteModal")).show();
+      }
+      async function doDelete(type, id) {
+        const url =
+          type === "product" ? `${PROD_URL}${id}/` : `${CAT_URL}${id}/`;
+        try {
+          const r = await fetch(url, { method: "DELETE" });
+          bootstrap.Modal.getInstance(
+            document.getElementById("deleteModal"),
+          ).hide();
+          if (r.ok || r.status === 204) {
+            toast(`${type === "product" ? "Product" : "Category"} deleted`);
+            if (type === "product") {
+              if (dtProducts) {
+                dtProducts.destroy();
+                dtProducts = null;
+              }
+              await fetchProducts();
+            } else {
+              if (dtCategories) {
+                dtCategories.destroy();
+                dtCategories = null;
+              }
+              await fetchCategories();
+            }
+          } else {
+            toast("Delete failed", "danger");
+          }
+        } catch (e) {
+          toast("Network error", "danger");
+        }
+      }
+
+      /* INIT */
+      (async () => {
+        await fetchCategories();
+        await fetchProducts();
+      })();
+    </script>
+  </body>
+</html>
